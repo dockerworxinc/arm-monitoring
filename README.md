@@ -1,6 +1,5 @@
 # A Prometheus & Grafana docker-compose stack for Raspberry Pi
 
-# Running Prometheus Docker container for monitoring Microservices on Raspberry Pi
 
 Emerging trends like microservices & containerization on IoT devices like Raspberry Pi, BananaPi, ZeroPi etc., all keep pushing the 
 boundaries of what constitutes DevOps Monitoring. We have customers using Prometheus that are monitoring and controlling their IoT 
@@ -12,20 +11,19 @@ Grafana, Zipkin & AlertManager all integrated with Slack channel for real-time a
  
 Prometheus is a self-hosted set of tools which collectively provide metrics storage, aggregation, visualization and alerting. Usually most of the available monitoring tools are push based, i.e. agents on the monitored servers talk to a central server (or set of servers) and send out their metrics. Prometheus is little different on this aspect – It is a pull based server which expects monitored servers to provide a web interface from which it can scrape data. This is a unique characteristic of Prometheus.
 
-The main features of Prometheus can be summed below:
+## Main Features of Prometheus
 
-Decentralized architecture
-Scalable data collection
-Powerful Query language (leverages the data model for meaningful alerting (including easy silencing) and graphing (for dashboards and for ad-hoc exploration).
-A multi-dimensional data model.( data can be sliced and diced at will, along dimensions like instance, service, endpoint, and method)
-No reliance on distributed storage; single server nodes are autonomous.
-Time series collection happens via a pull model over HTTP.
-Pushing time series is supported via an intermediary gateway.
-Targets are discovered via service discovery or static configuration.
-Multiple modes of graphing and dashboard support.
+- Decentralized architecture
+- Scalable data collection
+- Powerful Query language (leverages the data model for meaningful alerting (including easy silencing) and graphing (for dashboards and for ad-hoc exploration).
+- A multi-dimensional data model.( data can be sliced and diced at will, along dimensions like instance, service, endpoint, and method)
+- No reliance on distributed storage; single server nodes are autonomous.
+- Time series collection happens via a pull model over HTTP.
+- Pushing time series is supported via an intermediary gateway.
+- Targets are discovered via service discovery or static configuration.
+- Multiple modes of graphing and dashboard support.
+
 You can deep dive more into its architecture at https://prometheus.io/docs/introduction/overview/#architecture.
-
-Under this blog post, we will see how to bring Dockerworx Ready Solution for Prometheus in just 5 minutes. Let’s get started –
 
 ## Pre-requisite:
 
@@ -62,42 +60,28 @@ $curl -sSL https://get.docker.com/ | sh
 $docker version
 ```
 
+## Installing docker-compose
+
+```
+apt-get install -qy python-pip --no-install-recommends
+pip install pip --upgrade
+pip install docker-compose
+pip install --upgrade --force-reinstall docker-compose
+```
+
+Under this blog post, we will see how to bring Dockerworx Ready Solution for Prometheus Stack which for an ARM monitoring stack containing [Prometheus](http://prometheus.io/), Grafana, cAdvisor and Node scraper to monitor your Docker infrastructure. The images used are multi-arch for ARM32 and ARM64 and correctly fetched from DockerHub using metadata from your archtecture.
 
 
-Here's a quick start for an ARM monitoring stack containing [Prometheus](http://prometheus.io/), Grafana, cAdvisor and Node scraper to monitor your Docker infrastructure. The images used are multi-arch for ARM32 and ARM64 and correctly fetched from DockerHub using metadata from your archtecture.
 
-# Pre-requisites
-Before we get started installing the Prometheus stack. Ensure you [install](https://docs.docker.com/install/#server) the latest version of docker ~~and [docker swarm](https://docs.docker.com/engine/swarm/swarm-tutorial/)~~ on your Docker host machine.
-
-    sudo apt-get update
-    sudo apt-get install \
-      apt-transport-https \
-      ca-certificates \
-      curl \
-      gnupg2 \
-      software-properties-common
-    curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | sudo apt-key add -
-    add-apt-repository \
-      "deb https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
-      $(lsb_release -cs) \
-      stable"
-
-    sudo apt-get update -y
-    sudo apt-get install -y docker-ce
-    sudo usermod -aG docker $USER
-
-Install docker-compose
-
-    apt-get install -qy python-pip --no-install-recommends
-    pip install pip --upgrade
-    pip install docker-compose
-    pip install --upgrade --force-reinstall docker-compose
 
 # Installation & Configuration
+
 Clone the project locally to your Docker host.
 
-    git clone https://github.com/carlosedp/arm-monitoring.git
-    cd arm-monitoring
+```
+git clone https://github.com/carlosedp/arm-monitoring.git
+cd arm-monitoring
+```
 
 This deployment uses XXXXXX to provide external accessible dashboards thru Traefik, in case external access is not needed, remove all references to Traefik from the `docker-compose.yml` file:
 
